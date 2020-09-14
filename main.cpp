@@ -41,18 +41,20 @@ public:
 		
 		for (int i = 0; i < img.cols; i++) {
 			for (int j = 0; j < img.rows; j++) {
-
+				if (msg_i == strlen(msg)) return;
+				if (j + 4 > img.rows) i++;
 				//access each pixel of green channel
 				int pixel = img.at<cv::Vec3b>(j, i)[1];
-
 				//breaking the bits of each message charachter into 2 bit pairs
-				short bytes[4];
-				for (int k = 0; k < 4; k++) {
-					bytes[k] = msg[msg_i] & 3;
-					//discard last 2 bits
-					msg[msg_i] >> 2;
-				}
-				msg_i++;
+				int bits;
+				bits = msg[msg_i] & 3;
+				//discard last 2 bits
+				msg[msg_i] >> 2;
+				pixel >> 2;
+				//append last 2 bits
+				pixel |= bits;
+				if(j%4 == 0 && j>0)msg_i++;
+
 			}
 		}
 	}
